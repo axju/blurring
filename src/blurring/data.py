@@ -32,6 +32,18 @@ class WorkFolder():
             return self.subdirs[key]
         return None
 
+    def _get_dirs_arg(self, dirs):
+        if isinstance(dirs, str):
+            dirs = [dirs]
+        elif isinstance(dirs, (int, float)):
+            if dirs:
+                dirs = [name for name in self.subdirs]
+            else:
+                dirs = []
+        if not isinstance(dirs, list):
+            raise TypeError('"dirs" must be of type list, str or bool!')
+        return dirs
+
     def setup(self, dirs=True):
         """
         Setup work folder
@@ -44,20 +56,27 @@ class WorkFolder():
             os.makedirs(self.root)
             self.logger.debug('Create directory "%s"', self.root)
 
-        if isinstance(dirs, str):
-            dirs = [dirs]
-        elif isinstance(dirs, (int, float)):
-            if dirs:
-                dirs = [name for name in self.subdirs]
-            else:
-                dirs = []
-
-        if not isinstance(dirs, list):
-            raise TypeError('"dirs" must be of type list, str or bool!')
+        dirs = self._get_dirs_arg(dirs)
         for name in dirs:
             if not os.path.exists(self[name]):
                 os.makedirs(self[name])
                 self.logger.debug('Create directory "%s"', self.subdirs[name])
+
+    def check(self, dirs=True):
+        """
+        Check the work folder
+        dirs=False -> Check only the work folder
+        dirs=True -> Check work folder and all subfolder
+        dirs='frames' -> Check work folder and "frames" subfolder
+        dirs=['frames', 'templates'] -> Check work folder, "frames" and "templates" subfolder
+        """
+        if not os.path.exists(self.root):
+            return False
+        dirs = self._get_dirs_arg(dirs)
+        for name in dirs:
+            if not os.path.exists(self[name]):
+                return False
+        return True
 
     def clean(self):
         """
@@ -71,3 +90,7 @@ class WorkFolder():
         elif self.cleanup == 2:
             for name in os.listdir(self.root):
                 rmtree(os.path.join(self.root, name))
+
+    def files(self, kind):
+        """Return a list with all fils in the subdirectory"""
+        return sorted([os.path.join(self.subdirs[kind], fn) for fn in os.listdir(self.subdirs[kind])])

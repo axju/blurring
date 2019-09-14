@@ -1,5 +1,9 @@
+import os
 import tempfile
 import shutil
+
+
+DATADIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
 class TempdirManager(object):

@@ -1,5 +1,6 @@
 from setuptools import setup
 
+
 def main():
     setup(
         package_dir={'': 'src'},
@@ -20,6 +21,7 @@ def main():
             ]
         },
     )
+
 
 if __name__ == '__main__':
     main()

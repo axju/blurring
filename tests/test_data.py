@@ -14,6 +14,11 @@ class TestWorkFolder(TempdirManager, unittest.TestCase):
         folder.setup()
         return folder
 
+    def test_files(self):
+        folder = WorkFolder()
+        folder.setup()
+        self.assertIsInstance(folder.files('frames'), list)
+
     def test_full_setup(self):
         folder = WorkFolder()
         self.assertTrue(os.path.exists(folder['root']))
@@ -30,12 +35,12 @@ class TestWorkFolder(TempdirManager, unittest.TestCase):
         tmpdir = self.mkdtemp()
         root = os.path.join(tmpdir, 'test')
         folder = WorkFolder(root=root)
-        self.assertFalse(os.path.exists(root))
+        self.assertFalse(folder.check(False))
 
         folder.setup(False)
-        self.assertTrue(os.path.exists(folder.root))
+        self.assertTrue(folder.check(False))
         for dir in folder.FOLDERS:
-            self.assertFalse(os.path.exists(folder[dir]))
+            self.assertFalse(folder.check(dir))
 
         folder.setup(['templates', 'cleaned'])
         self.assertFalse(os.path.exists(folder['frames']))
