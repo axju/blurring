@@ -8,7 +8,7 @@ from shutil import rmtree
 class WorkFolder():
     """docstring for WorkFolder."""
 
-    FOLDERS = ['frames', 'templates', 'cleaned']
+    FOLDERS = ['frames', 'cleaned', 'templates']
 
     def __init__(self, **kwargs):
         """

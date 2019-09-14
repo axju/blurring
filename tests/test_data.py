@@ -1,24 +1,7 @@
 import os
 import unittest
-import tempfile
-import shutil
+from .support import TempdirManager
 from blurring.data import WorkFolder
-
-
-class TempdirManager(object):
-
-    def setUp(self):
-        super().setUp()
-        self.tempdirs = []
-
-    def tearDown(self):
-        super().tearDown()
-        while self.tempdirs:
-            shutil.rmtree(self.tempdirs.pop())
-
-    def mkdtemp(self):
-        self.tempdirs.append(tempfile.mkdtemp())
-        return self.tempdirs[-1]
 
 
 class TestWorkFolder(TempdirManager, unittest.TestCase):
