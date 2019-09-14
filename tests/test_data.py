@@ -16,13 +16,15 @@ class TestWorkFolder(TempdirManager, unittest.TestCase):
 
     def test_full_setup(self):
         folder = WorkFolder()
-        self.assertTrue(os.path.exists(folder.root))
+        self.assertTrue(os.path.exists(folder['root']))
         for dir in folder.FOLDERS:
             self.assertFalse(os.path.exists(folder[dir]))
 
         folder.setup()
         for dir in folder.FOLDERS:
             self.assertTrue(os.path.exists(folder[dir]))
+
+        self.assertFalse(folder['test'])
 
     def test_small_setup(self):
         tmpdir = self.mkdtemp()

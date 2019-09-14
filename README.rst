@@ -19,7 +19,7 @@ Virtual environment linux::
 
 Setup project::
 
-  python -m pip install --upgrade pip wheel setuptools tox flake8 pylama pylint
+  python -m pip install --upgrade pip wheel setuptools tox flake8 pylama pylint coverage
   python setup.py develop
 
 Run some test::
@@ -29,3 +29,8 @@ Run some test::
   python setup.py test
   python setup.py flake8
   python setup.py check
+
+Test coverage::
+
+  coverage run --source src/blurring setup.py test
+  coverage report -m

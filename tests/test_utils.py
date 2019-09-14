@@ -12,7 +12,12 @@ class TestTempGen(TempdirManager, unittest.TestCase):
         self.assertIsInstance(tempgen.data, list)
         with self.assertRaises(TypeError):
             TempGen(folder='.', data='')
+
+        with self.assertRaises(TypeError):
             TempGen(folder='.', data=[''])
+
+        tempgen = TempGen(folder='.', data=[{'test': True}])
+        self.assertIsInstance(tempgen.data, list)
 
     def test_create_temp_cv2(self):
         folder = self.mkdtemp()
@@ -28,6 +33,12 @@ class TestTempGen(TempdirManager, unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(folder, 'test.png')))
         TempGen(folder=folder, data=data).run()
         self.assertTrue(os.path.exists(os.path.join(folder, 'test.png')))
+
+    def test_run_logging(self):
+        data = {}
+        with self.assertLogs('TempGen', level='INFO') as cm:
+            TempGen(data=data).run()
+            self.assertEqual(cm.output, ['INFO:TempGen:Wrong data. Missing kind definition!'])
 
 
 
