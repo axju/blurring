@@ -2,7 +2,8 @@ import os
 import filecmp
 import unittest
 from .support import TempdirManager, DATADIR
-from blurring.utils import TempGen, TheBlur, create_frames, save_frames
+from blurring.blur import BlurImage
+from blurring.utils import TempGen, create_frames, save_frames
 
 
 class TestFrames(TempdirManager, unittest.TestCase):
@@ -17,25 +18,25 @@ class TestFrames(TempdirManager, unittest.TestCase):
         save_frames(dest, filename)
 
 
-class TestTheBlur(TempdirManager, unittest.TestCase):
+class TestBlurImage(TempdirManager, unittest.TestCase):
 
     FILENAME1 = os.path.join(DATADIR, 'frame000001.png')
     FILENAME2 = os.path.join(DATADIR, 'frame000002.png')
     TEMPS = [os.path.join(DATADIR, 'template.png')]
 
     def test_check_image(self):
-        blur = TheBlur(multi=False)
+        blur = BlurImage(multi=False)
         self.assertFalse(blur.check_image(self.FILENAME1, self.TEMPS))
         self.assertTrue(blur.check_image(self.FILENAME2, self.TEMPS))
 
     def test_check_image_multi(self):
-        blur = TheBlur(multi=True)
+        blur = BlurImage(multi=True)
         self.assertFalse(blur.check_image(self.FILENAME1, self.TEMPS))
         self.assertTrue(blur.check_image(self.FILENAME2, self.TEMPS))
 
     def test_blur_image(self):
         root = self.mkdtemp()
-        blur = TheBlur()
+        blur = BlurImage()
         file1 = os.path.join(root, 'frame000001.png')
         area1 = blur.check_image(self.FILENAME1, self.TEMPS)
         blur.blur_image(self.FILENAME1, area1, file1)

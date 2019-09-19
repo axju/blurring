@@ -2,17 +2,61 @@
 import os
 from logging import getLogger
 from shutil import copy, copyfile
-from blurring.data import WorkFolder
-from blurring.utils import TempGen, TheBlur, create_frames, save_frames
+import cv2
+import numpy as np
+from blurring.utils import TempGen, WorkFolder, create_frames, save_frames
 
 
-class Interface():
-    """docstring for TheBlur."""
+class BlurImage():
+    """docstring for BlurImage."""
+
+    def __init__(self, **kwargs):
+        self.logger = getLogger(self.__class__.__name__)
+        self.threshold = kwargs.get('threshold', 0.5)
+        self.multi = kwargs.get('multi', True)
+
+    def check_image(self, image, temps):
+        """Return a list of boundaries"""
+        self.logger.debug('Check image "%s"', image)
+        _, edges = cv2.threshold(cv2.imread(image, 0), 127, 255, cv2.THRESH_BINARY)
+
+        result = []
+        for filename in temps:
+            template = cv2.imread(filename, 0)
+            width, hight = template.shape[::-1]
+
+            res = cv2.matchTemplate(edges, template, cv2.TM_CCORR_NORMED)
+            if self.multi:
+                for point in zip(*np.where(res >= self.threshold)[::-1]):
+                    result.append((point, (point[0] + width, point[1] + hight)))
+            else:
+                _, max_val, _, max_loc = cv2.minMaxLoc(res)
+                if max_val > self.threshold:
+                    result.append((max_loc, (max_loc[0] + width, max_loc[1] + hight)))
+        return result
+
+    def blur_image(self, image, areas, dest):
+        """Blur all areas on this image"""
+        self.logger.debug('blur image "%s"', os.path.basename(image))
+        img = cv2.imread(image, 3)
+        blurred_img = cv2.GaussianBlur(img, (15, 15), 3)
+        mask = np.zeros(img.shape, dtype=np.uint8)
+        for point in areas:
+            cv2.rectangle(mask, point[0], point[1], (255, 255, 255), -1)
+        out = np.where(mask != (255, 255, 255), img, blurred_img)
+        if not areas:
+            cv2.imwrite(dest, img)
+        else:
+            cv2.imwrite(dest, out)
+
+
+class Blurring():
+    """docstring for Blurring."""
 
     def __init__(self, **kwargs):
         self.logger = getLogger(self.__class__.__name__)
 
-        self.blur = TheBlur(**kwargs)
+        self.blur = BlurImage(**kwargs)
         self.work = WorkFolder(**kwargs)
         self.debugdirs = []
 

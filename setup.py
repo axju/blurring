@@ -17,8 +17,15 @@ def main():
         ],
         entry_points={
             'console_scripts': [
-                'blurring=blurring.__main__:main',
-            ]
+                'blurring=blurring.cli:create_blurred_video',
+                'blurring-t=blurring.cli:create_template',
+            ],
+            'wmc.register_setup': [
+                'blurring=blurring.hook:setup',
+            ],
+            'wmc.register_main': [
+                'blurring=blurring.hook:main',
+            ],
         },
     )
 

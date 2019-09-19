@@ -1,7 +1,7 @@
 import os
 import unittest
 from .support import TempdirManager
-from blurring.data import WorkFolder
+from blurring.utils import WorkFolder
 
 
 class TestWorkFolder(TempdirManager, unittest.TestCase):
