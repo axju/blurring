@@ -6,11 +6,13 @@ nothing for a dynamical video. It should be used to clean up for screen records.
 
 Why
 ---
-Blurring is designed to expand "Watch me Coding". I take my screen in time
-lapse. One second, one frame. That's 3600 frames for an hour. An 8-hour coding
-day would be 28800 frames. I do not want to search for secret information in
-every single frame. I know my secret passwords so I can scan the video and blur
-them.
+
+Blurring is designed to expand `Watch me Coding <https://github.com/axju/wmc>`_.
+I take my screen in time lapse. One second, one frame. That's 3600 frames for
+an hour. An 8-hour coding day would be 28800 frames. I do not want to search
+for secret information in every single frame. I know my secret passwords so I
+can scan the video and blur them.
+
 
 Install
 -------
@@ -29,6 +31,15 @@ us supplied tool "blurring-t" (I know that is a ugly name, sorry)::
   ...
 
 Before you blur the video, checkout the original.
+
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blured.gif?raw=true
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: alternate text
+   :align: right
+
+
 
 Now blur it::
 
