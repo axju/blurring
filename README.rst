@@ -1,22 +1,32 @@
 ======================================
 Blurring - censor videos automatically
 ======================================
+.. image:: https://img.shields.io/pypi/v/blurring
+   :alt: PyPI
+   :target: https://pypi.org/project/blurring/
+
+.. image:: https://img.shields.io/pypi/pyversions/blurring
+   :alt: Python Version
+   :target: https://pypi.org/project/blurring/
+
+.. image:: https://img.shields.io/pypi/l/blurring
+   :alt: License
+   :target: https://pypi.org/project/blurring/
+
 I use a simple template match to find the secret spots in the video. So this is
 nothing for a dynamical video. It should be used to clean up for screen records.
 
 Why
 ---
-
 Blurring is designed to expand `Watch me Coding <https://github.com/axju/wmc>`_.
 I take my screen in time lapse. One second, one frame. That's 3600 frames for
 an hour. An 8-hour coding day would be 28800 frames. I do not want to search
 for secret information in every single frame. I know my secret passwords so I
 can scan the video and blur them.
 
-
 Install
 -------
-Simple as always. Do not forget to use a virtual environment ;)::
+Simple as always. Do not forget to use a virtual environment::
 
   >>> pip install blurring
 
@@ -32,20 +42,22 @@ us supplied tool "blurring-t" (I know that is a ugly name, sorry)::
 
 Before you blur the video, checkout the original.
 
-.. image:: https://github.com/axju/blurring/blob/develop/ext/blured.gif?raw=true
-   :height: 100px
-   :width: 200 px
-   :scale: 50 %
+.. image:: https://github.com/axju/blurring/blob/develop/ext/video.gif?raw=true
    :alt: alternate text
    :align: right
-
-
 
 Now blur it::
 
   blurring video.mp4 blurred.mp4 template.png
 
-This is the result. There is still something to improve, but for now I am happy.
+This is the result.
+
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blured.gif?raw=true
+   :alt: alternate text
+   :align: right
+
+
+There is still something to improve, but for now I am happy.
 
 
 Watch me coding integration
@@ -97,7 +109,7 @@ Virtual environment linux::
 
 Setup project::
 
-  python -m pip install --upgrade pip wheel setuptools tox flake8 pylama pylint coverage
+  python -m pip install --upgrade pip wheel setuptools tox flake8 pylama pylint coverage rstcheck
   python setup.py develop
 
 Run some test::
@@ -112,3 +124,13 @@ Test coverage::
 
   coverage run --source src/blurring setup.py test
   coverage report -m
+
+Publish package::
+
+  git tag -a 1.0.0a1 -m '1.0.0a1'
+  rstcheck README.rst
+  python setup.py --version
+  python setup.py check
+  python setup.py sdist bdist_wheel
+  twine upload dist/*
+  git push origin 1.0.0a1
