@@ -151,7 +151,7 @@ Publish package::
 
 Create videos::
 
-  ffmpeg -i ext/combine.mp4 -filter_complex "[0:v] palettegen" palette.png -y
-  ffmpeg -i ext/combine.mp4 -i palette.png -filter_complex "[0:v][1:v] paletteuse" ext/combine.gif
+  ffmpeg -i ext/video.mp4 -filter_complex "[0:v] palettegen" palette.png -y
+  ffmpeg -i ext/video.mp4 -i palette.png -filter_complex "[0:v][1:v] paletteuse" ext/video.gif
   ffmpeg -i ext/video.mp4 -filter:v "crop=400:400:0:0" ext/video_small.mp4
   ffmpeg -i ext/video.mp4 -i ext/blurred_60.mp4 -filter_complex hstack ext/combine.mp4
