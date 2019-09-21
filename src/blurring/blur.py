@@ -4,7 +4,7 @@ from logging import getLogger
 from shutil import copy, copyfile
 import cv2
 import numpy as np
-from blurring.utils import TempGen, WorkFolder, create_frames, save_frames
+from blurring.utils import TempGen, WorkFolder, create_frames, save_frames, find_area
 
 
 class BlurImage():
@@ -56,6 +56,8 @@ class Blurring():
     def __init__(self, **kwargs):
         self.logger = getLogger(self.__class__.__name__)
 
+        self.offset = kwargs.get('offset', 30)
+
         self.blur = BlurImage(**kwargs)
         self.work = WorkFolder(**kwargs)
         self.debugdirs = []
@@ -92,6 +94,28 @@ class Blurring():
             os.makedirs(foldername)
             self.logger.debug('Create debug folder "%s"', foldername)
 
+    def analyze(self):
+        """Analyze the frames and return a list with data"""
+        result = []
+        for frame_no, frame in enumerate(self.work.files('frames')):
+            areas = self.blur.check_image(frame, self.work.files('templates'))
+            for area in areas:
+                index = find_area(result, area)
+                if index == -1:
+                    result.append({'area': area, 'frames': [frame_no]})
+                else:
+                    result[index]['frames'].append(frame_no)
+
+        for values in result:
+            sectors = [[values['frames'][0], values['frames'][0]]]
+            for index in range(1, len(values['frames'])):
+                if (values['frames'][index] - sectors[-1][1]) == 1:
+                    sectors[-1][1] = values['frames'][index]
+                else:
+                    sectors.append([values['frames'][index], values['frames'][index]])
+            values['sectors'] = sectors
+        return result
+
     def run(self, src, dest):
         """
         Start the blurring process.
@@ -100,9 +124,16 @@ class Blurring():
         """
         self.logger.debug('Start the blurring. src="%s", dest="%s"', src, dest)
         create_frames(src, self.work['frames'])
-        for frame in self.work.files('frames'):
+        data = self.analyze()
+
+        for frame_no, frame in enumerate(self.work.files('frames')):
             basename = os.path.basename(frame)
-            areas = self.blur.check_image(frame, self.work.files('templates'))
+            areas = []
+            for values in data:
+                for sector in values['sectors']:
+                    if frame_no in range(sector[0]-self.offset, sector[1]+self.offset):
+                        areas.append(values['area'])
+                        break
             if areas:
                 self.blur.blur_image(frame, areas, os.path.join(self.work['cleaned'], basename))
             else:

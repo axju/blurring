@@ -13,8 +13,16 @@ Blurring - censor videos automatically
    :alt: License
    :target: https://pypi.org/project/blurring/
 
+.. image:: https://img.shields.io/pypi/dm/blurring
+   :alt: PyPI - Downloads
+   :target: https://pypi.org/project/blurring/
+
 I use a simple template match to find the secret spots in the video. So this is
 nothing for a dynamical video. It should be used to clean up for screen records.
+
+.. image:: https://github.com/axju/blurring/blob/develop/ext/combine.gif?raw=true
+   :alt: alternate text
+   :align: right
 
 Why
 ---
@@ -46,16 +54,22 @@ Before you blur the video, checkout the original.
    :alt: alternate text
    :align: right
 
-Now blur it::
+Now blur it. I use the offset to blur the password before it is completely
+visible::
 
-  blurring video.mp4 blurred.mp4 template.png
+  blurring video.mp4 blurred.mp4 template.png --offset 60
 
 This is the result.
 
-.. image:: https://github.com/axju/blurring/blob/develop/ext/blured.gif?raw=true
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blurred_60.gif?raw=true
    :alt: alternate text
    :align: right
 
+And this would be the result without the offset.
+
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blurred_0.gif?raw=true
+   :alt: alternate text
+   :align: right
 
 There is still something to improve, but for now I am happy.
 
@@ -109,13 +123,13 @@ Virtual environment linux::
 
 Setup project::
 
-  python -m pip install --upgrade pip wheel setuptools tox flake8 pylama pylint coverage rstcheck
+  python -m pip install --upgrade pip wheel setuptools tox flake8 pylint coverage rstcheck
   python setup.py develop
 
 Run some test::
 
   tox
-  pylama src/blurring
+  pylint src/blurring
   python setup.py test
   python setup.py flake8
   python setup.py check
@@ -134,3 +148,10 @@ Publish package::
   python setup.py sdist bdist_wheel
   twine upload dist/*
   git push origin 1.0.0a1
+
+Create videos::
+
+  ffmpeg -i ext/video.mp4 -filter_complex "[0:v] palettegen" palette.png -y
+  ffmpeg -i ext/video.mp4 -i palette.png -filter_complex "[0:v][1:v] paletteuse" ext/video.gif
+  ffmpeg -i ext/video.mp4 -filter:v "crop=400:400:0:0" ext/video_small.mp4
+  ffmpeg -i ext/video.mp4 -i ext/blurred_60.mp4 -filter_complex hstack ext/combine.mp4
