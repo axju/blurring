@@ -21,6 +21,10 @@ def create_blurred_video(argv=None):
         help='Select the template format.',
     )
     parser.add_argument(
+        '-o', '--offset', type=int, default=30,
+        help='Offset to start with the blurring [in frames].',
+    )
+    parser.add_argument(
         '-d', '--debug',
         help='Set a debug folder.',
     )
@@ -42,7 +46,7 @@ def create_blurred_video(argv=None):
         log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         basicConfig(level=DEBUG, format=log_format)
 
-    blur = Blurring()
+    blur = Blurring(offset=args.offset)
     blur.add_template(**{args.templates: args.temps})
     if args.debug:
         blur.add_debug(args.debug)

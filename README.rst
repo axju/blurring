@@ -46,16 +46,22 @@ Before you blur the video, checkout the original.
    :alt: alternate text
    :align: right
 
-Now blur it::
+Now blur it. I use the offset to blur the password before it is completely
+visible::
 
-  blurring video.mp4 blurred.mp4 template.png
+  blurring video.mp4 blurred.mp4 template.png --offset 60
 
 This is the result.
 
-.. image:: https://github.com/axju/blurring/blob/develop/ext/blured.gif?raw=true
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blured_60.gif?raw=true
    :alt: alternate text
    :align: right
 
+And this would be the result without the offset.
+
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blured_0.gif?raw=true
+   :alt: alternate text
+   :align: right
 
 There is still something to improve, but for now I am happy.
 
@@ -134,3 +140,8 @@ Publish package::
   python setup.py sdist bdist_wheel
   twine upload dist/*
   git push origin 1.0.0a1
+
+Create gif's::
+
+  ffmpeg -i ext/blured_60.mp4 -filter_complex "[0:v] palettegen" palette.png
+  ffmpeg -i ext/blured_60.mp4 -i palette.png -filter_complex "[0:v][1:v] paletteuse" ext/blured_60.gif
