@@ -20,6 +20,10 @@ Blurring - censor videos automatically
 I use a simple template match to find the secret spots in the video. So this is
 nothing for a dynamical video. It should be used to clean up for screen records.
 
+.. image:: https://github.com/axju/blurring/blob/develop/ext/combine.gif?raw=true
+   :alt: alternate text
+   :align: right
+
 Why
 ---
 Blurring is designed to expand `Watch me Coding <https://github.com/axju/wmc>`_.
@@ -57,13 +61,13 @@ visible::
 
 This is the result.
 
-.. image:: https://github.com/axju/blurring/blob/develop/ext/blured_60.gif?raw=true
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blurred_60.gif?raw=true
    :alt: alternate text
    :align: right
 
 And this would be the result without the offset.
 
-.. image:: https://github.com/axju/blurring/blob/develop/ext/blured_0.gif?raw=true
+.. image:: https://github.com/axju/blurring/blob/develop/ext/blurred_0.gif?raw=true
    :alt: alternate text
    :align: right
 
@@ -145,7 +149,9 @@ Publish package::
   twine upload dist/*
   git push origin 1.0.0a1
 
-Create gif's::
+Create videos::
 
-  ffmpeg -i ext/blured_60.mp4 -filter_complex "[0:v] palettegen" palette.png
-  ffmpeg -i ext/blured_60.mp4 -i palette.png -filter_complex "[0:v][1:v] paletteuse" ext/blured_60.gif
+  ffmpeg -i ext/combine.mp4 -filter_complex "[0:v] palettegen" palette.png -y
+  ffmpeg -i ext/combine.mp4 -i palette.png -filter_complex "[0:v][1:v] paletteuse" ext/combine.gif
+  ffmpeg -i ext/video.mp4 -filter:v "crop=400:400:0:0" ext/video_small.mp4
+  ffmpeg -i ext/video.mp4 -i ext/blurred_60.mp4 -filter_complex hstack ext/combine.mp4
