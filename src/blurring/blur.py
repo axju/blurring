@@ -98,7 +98,6 @@ class Blurring():
         """Analyze the frames and return a list with data"""
         result = []
         for frame_no, frame in enumerate(self.work.files('frames')):
-            basename = os.path.basename(frame)
             areas = self.blur.check_image(frame, self.work.files('templates'))
             for area in areas:
                 index = find_area(result, area)
@@ -109,11 +108,11 @@ class Blurring():
 
         for values in result:
             sectors = [[values['frames'][0], values['frames'][0]]]
-            for no in range(1, len(values['frames'])):
-                if (values['frames'][no] - sectors[-1][1]) == 1:
-                    sectors[-1][1] = values['frames'][no]
+            for index in range(1, len(values['frames'])):
+                if (values['frames'][index] - sectors[-1][1]) == 1:
+                    sectors[-1][1] = values['frames'][index]
                 else:
-                    sectors.append([values['frames'][no], values['frames'][no]])
+                    sectors.append([values['frames'][index], values['frames'][index]])
             values['sectors'] = sectors
         return result
 

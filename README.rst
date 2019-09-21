@@ -13,6 +13,10 @@ Blurring - censor videos automatically
    :alt: License
    :target: https://pypi.org/project/blurring/
 
+.. image:: https://img.shields.io/pypi/dm/blurring
+   :alt: PyPI - Downloads
+   :target: https://pypi.org/project/blurring/
+
 I use a simple template match to find the secret spots in the video. So this is
 nothing for a dynamical video. It should be used to clean up for screen records.
 
@@ -115,13 +119,13 @@ Virtual environment linux::
 
 Setup project::
 
-  python -m pip install --upgrade pip wheel setuptools tox flake8 pylama pylint coverage rstcheck
+  python -m pip install --upgrade pip wheel setuptools tox flake8 pylint coverage rstcheck
   python setup.py develop
 
 Run some test::
 
   tox
-  pylama src/blurring
+  pylint src/blurring
   python setup.py test
   python setup.py flake8
   python setup.py check
